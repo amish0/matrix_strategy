@@ -39,8 +39,8 @@ jobs:
         run: python setup.py sdist bdist_wheel
       - name: github expression and object context
         run: echo "print git hub object ${{ToJson(github)}}"
-      - name: print the running jobs & step
-        run: echo "print the running jobs & step ${{toJson(job)}}"
+      - name: print the running jobs and step
+        run: echo "print the running jobs and step ${{toJson(job)}}"
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
