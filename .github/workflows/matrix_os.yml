@@ -39,15 +39,15 @@ jobs:
         run: python setup.py sdist bdist_wheel
       
       - name: GitHub Context (Ubuntu Only)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' # condition to run on ubuntu
         run: echo "GitHub context ${{ toJson(github) }}"
 
       - name: Print Job Context (Ubuntu Only)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' # condition to run on ubuntu
         run: echo "Job context ${{ toJson(job) }}"
 
       - name: Print Job Context (Non-Ubuntu)
-        if: matrix.os != 'ubuntu-latest'
+        if: matrix.os != 'ubuntu-latest' # condition to run on non-ubuntu
         run: echo "Job context ${{ toJson(job) }}"
         
       - name: Upload artifact
