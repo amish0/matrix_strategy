@@ -1,4 +1,4 @@
-name: build_test
+name: Matrix Strategy
 on:
   push:
     branches:
@@ -10,7 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: [3.8, 3.9, 3.10]
     outputs:
       # my-artifact: ${{ steps.upload-artifact.outputs }}
       build_flage: ${{ steps.start_build_id.outputs.name }}
@@ -23,18 +27,21 @@ jobs:
       - name: python action setup
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' 
+          python-version: ${{ matrix.python-version }}
       - name: installing dependency
         run: |
           pip install -r requirements.txt
           pip install wheel
       - run: python main.py
+      - name: Python Version
+        run: python --version
       - name: build whl file
         run: python setup.py sdist bdist_wheel
       - name: github expression and object context
         run: echo "print git hub object ${{ToJson(github)}}"
       - name: print the running jobs & step
         run: echo "print the running jobs & step ${{toJson(job)}}"
+      
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -43,25 +50,25 @@ jobs:
             dist/*
             build/*
       - run: echo "bye bye ...."
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: start build
-        run: echo "staarting build"
-      - name: download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: my-artifact-${{ github.ref_name}}
-      - name: Display structure of downloaded files
-        run: ls -R
-      - name: Display the list of file present in dist directory
-        run: ls dist
-      - name: Display the list of file present in build directory
-        run: ls build
-      - name: JoB output from build job
-        run: echo "Job output from build job ${{needs.build.outputs.build_flage}}"
-          # echo "Job output from build job ${{needs.build.outputs.my-artifact}}"
-      - name: get code 
-        uses: actions/checkout@v4
-      - run: echo "deployment jobs"
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: start build
+  #       run: echo "staarting build"
+  #     - name: download artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: my-artifact-${{ github.ref_name}}
+  #     - name: Display structure of downloaded files
+  #       run: ls -R
+  #     - name: Display the list of file present in dist directory
+  #       run: ls dist
+  #     - name: Display the list of file present in build directory
+  #       run: ls build
+  #     - name: JoB output from build job
+  #       run: echo "Job output from build job ${{needs.build.outputs.build_flage}}"
+  #         # echo "Job output from build job ${{needs.build.outputs.my-artifact}}"
+  #     - name: get code 
+  #       uses: actions/checkout@v4
+  #     - run: echo "deployment jobs"
