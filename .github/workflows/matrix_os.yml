@@ -37,11 +37,19 @@ jobs:
         run: python --version
       - name: build whl file
         run: python setup.py sdist bdist_wheel
-      - name: github expression and object context
-        run: echo "print git hub object ${{ toJson(github) }}"
-      - name: print the running jobs and step
-        run: echo "print the running jobs and step ${{ toJson(job) }}"
       
+      - name: GitHub Context (Ubuntu Only)
+        if: matrix.os == 'ubuntu-latest'
+        run: echo "GitHub context: ${{ toJson(github) }}"
+
+      - name: Print Job Context (Ubuntu Only)
+        if: matrix.os == 'ubuntu-latest'
+        run: echo "Job context: ${{ toJson(job) }}"
+
+      - name: Print Job Context (Non-Ubuntu)
+        if: matrix.os != 'ubuntu-latest'
+        run: echo "Job context: ${{ toJson(job) }}"
+        
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
