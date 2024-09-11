@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python_version: [3.8, 3.9, 3.10, 3.11]
+        python_version: ['3.8', '3.9', '3.10', '3.11']
     steps:
         - name: Checkout code
           uses: actions/checkout@v4
@@ -25,5 +25,10 @@ jobs:
           run: python main.py
 ```
 This workflow will run the `build` job 8 times, once for each combination of `os` and `python_version`. The `os` and `python_version` values are defined in the `matrix` section of the `strategy` key.
+
+"matrix" is a list of key-value pairs. Each key is a variable name, and each value is a list of values for that variable. The workflow will run once for each combination of values in the matrix."
+
+If any error occurs in any of the matrix, the workflow will stop  for all jobs and the error will be shown in the logs.
+![Error](data/error.png "error")
 
 ## ReUsable Workflow 
